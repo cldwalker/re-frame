@@ -13,6 +13,12 @@
 
 (enable-console-print!)
 
+(comment
+  (-> js/localStorage (.getItem "todos-reframe"))
+  (-> re-frame.db/app-db)
+  (-> @re-frame.handlers/id->fn keys)
+  )
+
 ;; -- Routes and History ------------------------------------------------------
 
 (defroute "/" [] (dispatch [:set-showing :all]))

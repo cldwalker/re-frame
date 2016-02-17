@@ -3,10 +3,27 @@
   (:require [reagent.core :as reagent]
             [re-frame.core :refer [register-handler
                                    path
+                                   debug
+                                   undoable
                                    register-sub
                                    dispatch
                                    dispatch-sync
                                    subscribe]]))
+
+(comment
+  (js/clearInterval time-updater)
+  (dispatch [:time-color "#0f0"])
+  (dispatch [:redo])
+  (dispatch [:purge-redos])
+  (-> @re-frame.db/app-db)
+  (prn "FOO")
+  (-> @re-frame.handlers/id->fn keys)
+  (-> re-frame.router/event-queue .-fsm-state)
+  (enable-console-print!)
+  (-> @re-frame.undo/undo-list)
+  (re-frame.core/add-post-event-callback (fn [e queue]
+                                           (prn :EVENT e queue)))
+  )
 
 ;; trigger a dispatch every second
 (defonce time-updater (js/setInterval
@@ -26,10 +43,9 @@
     [db _]
     (merge db initial-state)))    ;; what it returns becomes the new state
 
-
 (register-handler
   :time-color                     ;; usage:  (submit [:time-color 34562])
-  (path [:time-color])            ;; this is middleware
+  (comp debug (path [:time-color]))            ;; this is middleware
   (fn
     [time-color [_ value]]        ;; path middleware adjusts the first parameter
     value))

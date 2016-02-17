@@ -1,6 +1,7 @@
 (ns todomvc.views
   (:require [reagent.core  :as reagent :refer [atom]]
-            [re-frame.core :refer [subscribe dispatch]]))
+            [re-frame.core :refer [subscribe dispatch]])
+  (:require-macros [reagent.ratom :refer [reaction]]))
 
 
 (defn todo-input [{:keys [title on-save on-stop]}]
@@ -70,7 +71,8 @@
 
 (defn todo-app
   []
-  (let [todos           (subscribe [:todos])
+  (let [;;todos           (subscribe [:todos])
+        todos (reaction (vals (:todos @re-frame.db/app-db)))
         visible-todos   (subscribe [:visible-todos])
         completed-count (subscribe [:completed-count])]
     (fn []
@@ -79,7 +81,7 @@
         [:header#header
          [:h1 "todos"]
          [todo-input {:class "new-todo"
-                      :placeholder "What needs to be done?"
+                      :placeholder "What's going on?"
                       :on-save #(dispatch [:add-todo %])}]]
         (when-not (empty? @todos)
           [:div

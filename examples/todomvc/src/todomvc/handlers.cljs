@@ -1,7 +1,7 @@
 (ns todomvc.handlers
   (:require
     [todomvc.db    :refer [default-value ls->todos todos->ls! schema]]
-    [re-frame.core :refer [register-handler path trim-v after]]
+    [re-frame.core :refer [register-handler path trim-v after debug]]
     [schema.core   :as s]))
 
 
@@ -26,6 +26,7 @@
 ;; middleware for any handler that manipulates todos
 (def todo-middleware [check-schema-mw ;; ensure the schema is still valid
                       (path :todos)   ;; 1st param to handler will be value from this path
+                      debug
                       ->ls            ;; write to localstore each time
                       trim-v])        ;; remove event id from event vec
 
